@@ -1,13 +1,19 @@
 import csv
 import pymysql
+from tkinter import *
 
 conn = pymysql.connect(host='localhost', user='root', password='root', db='library')
 cursor = conn.cursor()
+
+button_width = 14
+button_height = 2
 
 
 class DataStore:
     def __init__(self):
         print("Data Store Init")
+        self.value = None
+        self.reset_confirm_root = None
 
     def backup_data(self):
         print("Backing up data")
@@ -114,7 +120,6 @@ class DataStore:
                     line_count += 1
             print(f'Processed {line_count} lines.')
 
-
     def __load_issues(self):
         print("Load issues")
         with open(r'../../backup/issues.csv') as csv_file:
@@ -133,8 +138,10 @@ class DataStore:
                     line_count += 1
             print(f'Processed {line_count} lines.')
 
-
     def reset_data(self):
+        print("Reset Data...")
+        # if self.is_reset_confirmed():
+        print("Reset Confirmed")
         print("Reset Issues")
         sql = "truncate table `issues`;"
         cursor.execute(sql)
@@ -146,3 +153,30 @@ class DataStore:
         cursor.execute(sql)
 
         conn.commit()
+        # else:
+        #     print("Reset Declined")
+
+    def is_reset_confirmed(self):
+        print("Confirmation required for data reset")
+
+        self.reset_confirm_root = Tk()
+        self.reset_confirm_root.title("Confirmation")
+
+        message = Label(self.reset_confirm_root, text="Do you want to reset data?")
+        message.pack(side=LEFT)
+
+        yes_button = Button(self.reset_confirm_root, width=button_width, height=button_height, fg="green", text="YES", command=lambda: self.finish(True))
+        no_button = Button(self.reset_confirm_root, width=button_width, height=button_height, fg="green", text="NO", command=lambda: self.finish(False))
+
+        yes_button.pack()
+        no_button.pack()
+        print("Finish before mainloop")
+        self.reset_confirm_root.mainloop()
+        print("Finish before return")
+        return self.value
+
+    def finish(self, value):
+        print("Finish: %s" % value)
+        self.value = value
+        self.reset_confirm_root.destroy()
+        print("Finish: destroyed")
