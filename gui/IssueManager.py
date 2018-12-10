@@ -6,6 +6,20 @@ button_width = 14
 button_height = 2
 bg_color = 'sky blue'
 
+conn = pymysql.connect(host='localhost', user='root', password='root', db='library')
+cursor = conn.cursor()
+
+
+class FineUpdator:
+    def __init__(self):
+        print("Fine Updator init")
+
+    def update(self):
+        print("Update")
+        sql = "update `issues` set `fine`=FLOOR(DATEDIFF(CURRENT_DATE, `due_date`)/7)*5;"
+        cursor.execute(sql)
+        conn.commit()
+
 
 class IssuesWindow:
     def __init__(self):
@@ -47,8 +61,6 @@ class IssuesWindow:
         self.from_date = self.from_date_field.get()
         due_date = datetime.datetime.strptime(self.from_date, '%Y-%m-%d') + datetime.timedelta(days=14)
         print(due_date.date())
-        conn = pymysql.connect(host='localhost', user='root', password='root', db='library')
-        cursor = conn.cursor()
         add = "INSERT INTO `issues` (`book_id`, `student_id`, `from_date`, `due_date`) VALUES (%s, %s, %s, %s)"
         val = (book_id, student_id, self.from_date, due_date.date())
         cursor.execute(add, val)
@@ -95,8 +107,6 @@ class ReturnWindow:
         print("Return issue to DB...")
         book_id=self.book_id_field.get()
 
-        conn = pymysql.connect(host='localhost', user='root', password='root', db='library')
-        cursor = conn.cursor()
         sql = "delete from `issues` where `book_id`='" + book_id + "';"
         cursor.execute(sql)
         conn.commit()
@@ -112,8 +122,6 @@ class ShowIssuesWindow:
     def __init__(self):
         table = Tk()
         table.title("Show Books")
-        conn = pymysql.connect(host='localhost', user='root', password='root', db='library')
-        cursor = conn.cursor()
 
         sql = 'select * from `issues`;'
         countrow = cursor.execute(sql)
@@ -129,18 +137,18 @@ class ShowIssuesWindow:
         Label(table, text="Fine", bg=bg_color, relief=GROOVE).grid(row=0, column=5, sticky="nsew")
 
         for index, dat in enumerate(data):
-            Label(table, text=dat[0], relief=GROOVE).grid(row=index + 1, column=0, sticky="nsew")
-            Label(table, text=dat[1], relief=GROOVE).grid(row=index + 1, column=1, sticky="nsew")
-            Label(table, text=dat[2], relief=GROOVE).grid(row=index + 1, column=2, sticky="nsew")
-            Label(table, text=dat[3], relief=GROOVE).grid(row=index + 1, column=3, sticky="nsew")
-            Label(table, text=dat[4], relief=GROOVE).grid(row=index + 1, column=4, sticky="nsew")
-            Label(table, text=dat[5], relief=GROOVE).grid(row=index + 1, column=5, sticky="nsew")
+            if dat[5] > 0:
+                entry_label_text_color = 'red'
+            else:
+                entry_label_text_color = 'black'
+            Label(table, text=dat[0], fg=entry_label_text_color, relief=GROOVE).grid(row=index + 1, column=0, sticky="nsew")
+            Label(table, text=dat[1], fg=entry_label_text_color, relief=GROOVE).grid(row=index + 1, column=1, sticky="nsew")
+            Label(table, text=dat[2], fg=entry_label_text_color, relief=GROOVE).grid(row=index + 1, column=2, sticky="nsew")
+            Label(table, text=dat[3], fg=entry_label_text_color, relief=GROOVE).grid(row=index + 1, column=3, sticky="nsew")
+            Label(table, text=dat[4], fg=entry_label_text_color, relief=GROOVE).grid(row=index + 1, column=4, sticky="nsew")
+            Label(table, text=dat[5], fg=entry_label_text_color, relief=GROOVE).grid(row=index + 1, column=5, sticky="nsew")
 
         table.mainloop()
-# root = Tk()
-# root.title("Add New Issue")
-# IssuesWindow(root)
-# root.mainloop()
 
 
 

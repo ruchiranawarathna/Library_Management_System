@@ -6,6 +6,7 @@ from BookManager import ShowBooksWindow
 from IssueManager import IssuesWindow
 from IssueManager import ReturnWindow
 from IssueManager import ShowIssuesWindow
+from IssueManager import FineUpdator
 from StudentManager import ShowStudentsWindow
 from StudentManager import AddStudentWindow
 from StudentManager import RemoveStudentWindow
@@ -71,6 +72,10 @@ def show_issues():
     print("Show Issues")
     ShowIssuesWindow()
 
+def update_fines():
+    print("Update Fines")
+    fu = FineUpdator()
+    fu.update()
 
 def backup():
     print("Backup Data")
@@ -130,6 +135,8 @@ def show(master):
                            command=return_book)
     show_issues_button = Button(issue_frame, text="Show All Issues", fg="black", height=button_height,
                                 width=button_width, command=show_issues)
+    update_fines_button = Button(issue_frame, text="Update Fines", fg="black", height=button_height,
+                                width=button_width, command=update_fines)
 
     backup_button = Button(backup_frame, text="Backup Data", fg="black", height=button_height, width=button_width,
                            command=backup)
@@ -149,6 +156,7 @@ def show(master):
     new_issue_button.pack(side=LEFT)
     return_button.pack(side=LEFT)
     show_issues_button.pack(side=LEFT)
+    update_fines_button.pack(side=LEFT)
     backup_button.pack(side=LEFT)
     load_button.pack(side=LEFT)
     reset_button.pack(side=LEFT)
