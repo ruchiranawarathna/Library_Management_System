@@ -44,6 +44,7 @@ class IssuesWindow:
         student_id=self.student_id_field.get()
         print(book_id, student_id)
 
+        self.from_date = self.from_date_field.get()
         due_date = datetime.datetime.strptime(self.from_date, '%Y-%m-%d') + datetime.timedelta(days=14)
         print(due_date.date())
         conn = pymysql.connect(host='localhost', user='root', password='root', db='library')

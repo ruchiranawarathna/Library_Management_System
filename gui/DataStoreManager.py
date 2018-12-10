@@ -14,6 +14,7 @@ class DataStore:
         print("Data Store Init")
         self.value = None
         self.reset_confirm_root = None
+        self.popup_root = None
 
     def backup_data(self):
         print("Backing up data")
@@ -138,25 +139,25 @@ class DataStore:
                     line_count += 1
             print(f'Processed {line_count} lines.')
 
-    def reset_data(self):
+    def reset_data(self, master):
         print("Reset Data...")
-        # if self.is_reset_confirmed():
-        print("Reset Confirmed")
-        print("Reset Issues")
-        sql = "truncate table `issues`;"
-        cursor.execute(sql)
-        print("Reset Students")
-        sql = "delete from `students`;"
-        cursor.execute(sql)
-        print("Reset Books")
-        sql = "delete from `books`;"
-        cursor.execute(sql)
+        if self.is_reset_confirmed(master):
+            print("Reset Confirmed")
+            print("Reset Issues")
+            sql = "truncate table `issues`;"
+            cursor.execute(sql)
+            print("Reset Students")
+            sql = "delete from `students`;"
+            cursor.execute(sql)
+            print("Reset Books")
+            sql = "delete from `books`;"
+            cursor.execute(sql)
 
-        conn.commit()
-        # else:
-        #     print("Reset Declined")
+            conn.commit()
+        else:
+            print("Reset Declined")
 
-    def is_reset_confirmed(self):
+    def is_reset_confirmed(self, master):
         print("Confirmation required for data reset")
 
         self.reset_confirm_root = Tk()
@@ -165,18 +166,36 @@ class DataStore:
         message = Label(self.reset_confirm_root, text="Do you want to reset data?")
         message.pack(side=LEFT)
 
-        yes_button = Button(self.reset_confirm_root, width=button_width, height=button_height, fg="green", text="YES", command=lambda: self.finish(True))
-        no_button = Button(self.reset_confirm_root, width=button_width, height=button_height, fg="green", text="NO", command=lambda: self.finish(False))
+        yes_button = Button(self.reset_confirm_root, width=button_width, height=button_height, fg="green", text="YES", command=lambda: self.finish(master, True))
+        no_button = Button(self.reset_confirm_root, width=button_width, height=button_height, fg="green", text="NO", command=lambda: self.finish(master, False))
 
         yes_button.pack()
         no_button.pack()
-        print("Finish before mainloop")
         self.reset_confirm_root.mainloop()
-        print("Finish before return")
         return self.value
 
-    def finish(self, value):
+    def finish(self, master, value):
         print("Finish: %s" % value)
         self.value = value
         self.reset_confirm_root.destroy()
-        print("Finish: destroyed")
+        if value:
+            self.popup_notification(master)
+
+    def popup_notification(self, master):
+        print("popup_notification")
+
+        self.popup_root = Tk()
+        self.popup_root.title("Message")
+
+        message = Label(self.popup_root, text="Data Reset Completed. Please restart the application.")
+        message.pack(side=LEFT)
+
+        ok_button = Button(self.popup_root, width=button_width, height=button_height, fg="green", text="OK", command=lambda: self.close_popup(master))
+
+        ok_button.pack()
+        self.popup_root.mainloop()
+
+    def close_popup(self, master):
+        print("close_popup")
+        self.popup_root.destroy()
+        master.destroy()

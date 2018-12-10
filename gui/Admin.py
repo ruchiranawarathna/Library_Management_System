@@ -15,6 +15,9 @@ store = DataStore()
 button_width = 14
 button_height = 2
 
+#   --------------------------------------------------------------
+root = Tk()  # main window
+
 
 def add_book():
     print("Add book")
@@ -81,13 +84,13 @@ def load():
 
 def reset():
     print("Reset Data")
-    store.reset_data()
+    store.reset_data(root)
 
 
-def show(mster):
+def show(master):
     print("Show")
-    mster.title("LMS - Admin Panel")
-    mster.iconbitmap(r'..\images\book.ico')
+    master.title("LMS - Admin Panel")
+    master.iconbitmap(r'..\images\book.ico')
 
     institute = Label(root, text="Sumanadeva Daham Pasela", bg="white", fg="purple")
     institute.pack(fill=X)  # Dynamically change length in X direction
@@ -150,11 +153,9 @@ def show(mster):
     load_button.pack(side=LEFT)
     reset_button.pack(side=LEFT)
 
-    root.mainloop()
 
-
-#   --------------------------------------------------------------
-root = Tk()  # main window
 show(root)
+root.mainloop()
+
 
 
