@@ -88,16 +88,10 @@ class ReturnWindow:
         bottom_frame.pack(side=BOTTOM)
 
         self.book_id_label = Label(frame, text="Book ID")
-        self.student_id_label = Label(frame, text="Student ID")
-
         self.book_id_field = Entry(frame)
-        self.student_id_field = Entry(frame)
-        self.student_id_field = Entry(frame, state='disabled')
 
         self.book_id_label.grid(row=0, sticky=E)
-        self.student_id_label.grid(row=1, sticky=E)
         self.book_id_field.grid(row=0, column=1)
-        self.student_id_field.grid(row=1, column=1)
 
         self.return_button = Button(bottom_frame, width=button_width, height=button_height, fg="blue", text="RETURN", command=self.return_book)
         self.return_button.config(relief=RAISED)

@@ -2,6 +2,7 @@ from tkinter import *
 
 from BookManager import AddBookWindow
 from BookManager import RemoveBookWindow
+from BookManager import EditBookWindow
 from BookManager import ShowBooksWindow
 from IssueManager import IssuesWindow
 from IssueManager import ReturnWindow
@@ -27,7 +28,7 @@ def add_book():
 
 def edit_book():
     print("Edit Book")
-
+    EditBookWindow()
 
 def remove_book():
     print("Remove book")
